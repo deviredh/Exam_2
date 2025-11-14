@@ -20,14 +20,14 @@ do
 	#establish class rules
 	if [ "$ip" -lt 15 ]; then
 		class="Rural"
-	elif [ "$ip" -le 49 ]; then
+	elif [ "$ip" -ge 15 ] && [ "$ip" -le 49 ]; then
 		class="Suburban"
 	else
 		class="Urban"
 	fi
 
-	#print results to output table
-	echo -e "$site\t$class" >> "$OUT"
+	#print results to formatted output table
+	echo -e "$site\t\t$class" >> "$OUT"
 done < "$IPSITES"
 
 #print to text file
