@@ -24,5 +24,5 @@ do
 done
 
 #print to table in correct format
-cat sampling_summary.txt | expand -t 20
+cat "$OUT" | expand -t 20
 
