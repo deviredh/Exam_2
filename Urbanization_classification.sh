@@ -1,20 +1,22 @@
 #!/bin/bash
 
-FILE="fixed.csv"
-echo -e "Site_Code\tClass" > urbanization_classification.txt
+#establish path to csv and output text file
+FILE="/home/shared/hasita/Exam_2/Exam2_Levine_et_al_body_size.csv"
+OUT="Urbanization_classification.txt"
 
-tail -n +2 "$FILE" | cut -d',' -f2,5 > pairs.txt
+#add header for output table
+echo -e "Site_Code\tClass" > "$OUT"
 
-> seen.txt
+#extract a list of the sites and ips, remove any extra characters and duplicates
+tail -n +2 "$FILE" | tr -d '\r' | tr -d '\t' | tr -d ' ' | cut -d',' -f2,5 | sort -u  > ip_sites.txt
 
+#create a loop for each site and ip class
 while IFS=',' read site ip
 do
-	if grep -w "$site" seen.txt > /dev/null; then
-		continue
-	fi
+	#make sure ips are clean
+	ip=$(echo "$ip" | tr -d '\r')
 
-	echo "$site" >> seen.txt
-
+	#establish class rules
 	if [ "$ip" -lt 15 ]; then
 		class="Rural"
 	elif [ "$ip" -le 49 ]; then
@@ -23,8 +25,9 @@ do
 		class="Urban"
 	fi
 
-	echo -e "$site\t$class" >> urbanization_classification.txt
-done < pairs.txt
+	#print results to output table
+	echo -e "$site\t$class" >> "$OUT"
+done < ip_sites.txt
 
-cat urbanization_classification.txt
-
+#print to text file
+cat "$OUT"
